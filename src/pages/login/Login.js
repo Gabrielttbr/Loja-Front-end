@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from 'react-router-dom';
 import { useRef, useState, useEffect } from "react";
 import Feedback from "react-bootstrap/Feedback";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Alert } from "react-bootstrap";
 
 //import css
 import "./style.css";
@@ -10,7 +10,8 @@ export default function Login() {
   const [validated, setValidated] = useState(false);
   const [email, setEmail] = useState(null);
   const [senha, setSenha] = useState(null);
-  const [RedirectTo, setRedirectTo] = useState(null)
+  const [RedirectTo, setRedirectTo] = useState(null);
+  const [AlertErro, setAlertErro] = useState(null)
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
@@ -45,7 +46,10 @@ export default function Login() {
         }
         } )
           
-        .catch((error) => console.log("Valha na autentificação"));
+        .catch((error) => {
+          setAlertErro(true)
+          console.log("Erro")
+        });
     }
   };
   if(RedirectTo != null){
@@ -86,7 +90,12 @@ export default function Login() {
                 }}
               />
             </Form.Group>
-
+            {
+              AlertErro === true ? 
+              <Alert key='danger' variant='danger'>
+              This is a  alert—check it out!
+            </Alert>
+            : <p> </p>}
             <button type="submit">login</button>
           </Form>
         </div>
