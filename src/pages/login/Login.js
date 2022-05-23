@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 import { useRef, useState, useEffect } from "react";
 import Feedback from "react-bootstrap/Feedback";
 import { Container, Form, Button } from "react-bootstrap";
@@ -10,6 +10,7 @@ export default function Login() {
   const [validated, setValidated] = useState(false);
   const [email, setEmail] = useState(null);
   const [senha, setSenha] = useState(null);
+  const [RedirectTo, setRedirectTo] = useState(null)
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
@@ -32,12 +33,27 @@ export default function Login() {
       };
 
       fetch("http://localhost:3000/usuario/login", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
+        .then((response) => response.json())
+        .then((result) =>{
+          if(result.usuarioValid == true){
+            // Se os dados baterem 
+            console.log("Usuário logado")
+            return setRedirectTo('/home')
+          }else{
+            // Se não
+            console.log("Usuário não logado")
+        }
+        } )
+          
+        .catch((error) => console.log("Valha na autentificação"));
     }
   };
+  if(RedirectTo != null){
+    return (
+      <Navigate to={RedirectTo} ></Navigate>
+    )
 
+  }
   return (
     <section className="login">
       <div className="login-page">
