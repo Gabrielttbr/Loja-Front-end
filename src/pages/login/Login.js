@@ -8,48 +8,57 @@ import { Container, Form, Button } from "react-bootstrap";
 import "./style.css";
 export default function Login() {
   const [validated, setValidated] = useState(false);
-
+  const [email, setEmail] = useState(null);
+  const [senha, setSenha] = useState(null); 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+    event.preventDefault();
+    event.stopPropagation();
+      if (form.checkValidity() === true) {
+        console.log(JSON.stringify({email: email, senha: senha})  )
+        fetch('http://localhost:3000/usuario/login', {
+          method: "POST",
+      
+          body: JSON.stringify({email: email, senha: senha})       
+      }).then( (e) => { console.log(e)})
+      .catch((e) => {console.log(e)})
     }
-    setValidated(true);
-  };
+    }
 
-  return (
-    <section className="login">
-      <div className="login-page">
-        <div className="form">
-          <Form
-            className="login-form"
-            noValidate
-            validated={validated}
-            onSubmit={handleSubmit}
-          >
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Control
-                className="input-form"
-                type="text"
-                placeholder="Usuário"
-                required
-              />
+    return (
+      <section className="login">
+        <div className="login-page">
+          <div className="form">
+            <Form
+              className="login-form"
+              noValidate
+              validated={validated}
+              onSubmit={handleSubmit}
+            >
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Control
+                  className="input-form"
+                  type="email"
+                  placeholder="Email"
+                  required
+                  onChange={(e) => {setEmail(e.target.value)}}
+                />
 
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Control
-                className="input-form"
-                type="password"
-                placeholder="password"
-                required
-              />
-            </Form.Group>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Control
+                  className="input-form"
+                  type="password"
+                  placeholder="password"
+                  required
+                  onChange={(e) => { setSenha(e.target.value)}}
+                />
+              </Form.Group>
 
-            <button type="submit">login</button>
-          </Form>
+              <button type="submit">login</button>
+            </Form>
+          </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
 }
